@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealMigrate - Your Hunger, Our Mission</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B35; /* Vibrant orange for food appeal */
+            --secondary: #2EC4B6; /* Teal accent for freshness */
+            --dark: #20232A; /* Dark charcoal for contrast */
+            --light: #FDFFFC; /* Clean white for space */
+            --accent: #E71D36; /* Bright red for calls to action */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header/Navbar Styles */
+        header {
+            background-color: var(--dark);
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--light);
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--primary);
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin-bottom: 0;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background-color: var(--primary);
+            color: var(--dark);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-login {
+            background-color: transparent;
+            color: var(--light);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-login:hover {
+            background-color: var(--primary);
+            color: var(--dark);
+        }
+        
+        .btn-signup {
+            background-color: var(--primary);
+            color: var(--dark);
+        }
+        
+        .btn-signup:hover {
+            background-color: #ff824f;
+            transform: translateY(-2px);
+        }
+        
+        /* Main Content Styles */
+        main {
+            padding-top: 100px; /* To account for fixed header */
+            padding-bottom: 2rem;
+            flex: 1;
+        }
+        
+        /* Content Section */
+        .content-section {
+            padding: 3rem 5%;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background-color: #f9f9f9;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 0.8rem 2rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff824f;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--dark);
+            border: 2px solid var(--primary);
+            padding: 0.8rem 2rem;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--primary);
+            color: var(--light);
+        }
+        
+        /* Feature Cards */
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(255, 107, 53, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+        
+        /* Popular Items */
+        .menu-preview {
+            padding: 5rem 0;
+            background-color: #f5f5f5;
+        }
+        
+        .menu-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        
+        .menu-item {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            width: 300px;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            object-position: center;
+        }
+        
+        .menu-item-content {
+            padding: 1.5rem;
+        }
+        
+        .menu-item-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-item-description {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .menu-item-price {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .menu-item-button {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            background-color: var(--primary);
+            color: var(--light);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item-button:hover {
+            background-color: #ff824f;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 3rem 5% 1rem;
+            margin-top: auto;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-logo span {
+            color: var(--primary);
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: row;
+        }
+        
+        .footer-column {
+            margin-right: 120px;
+        }
+        
+        .footer-links h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            position: relative;
+        }
+        
+        .footer-links h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary);
+            bottom: -10px;
+            left: 0;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+        }
+        
+        .footer-bottom-links {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        
+        .footer-bottom-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-bottom-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Responses Section Styles */
+        .responses-section {
+            background-color: #f5f5f5;
+            padding: 3rem 5%;
+        }
+        
+        .response-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .response-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        
+        .response-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .response-date {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .response-email {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+        
+        .response-message {
+            line-height: 1.6;
+        }
+        
+        .no-responses {
+            text-align: center;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 992px) {
+            .footer-links {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .footer-column {
+                margin-right: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                Meal<span>Migrate</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <!-- <li><a href="#features">Features</a></li>
+                    <li><a href="#responses">Responses</a></li> -->
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="">About us</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <!-- <a href="login.html"><button class="btn btn-login">Login</button></a> -->
+                <!-- <a href="signup.html"><button class="btn btn-signup">Sign Up</button></a> -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Contact Section -->
+        <section id="contact" class="content-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Contact Us</h2>
+                    <p>Get in touch with us for any queries or feedback</p>
+                </div>
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form id="contactForm">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Your Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="5" placeholder="Enter your message" required></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary px-5">Send Message</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Responses Section -->
+        <section id="responses" class="responses-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>User Responses</h2>
+                    <p>Check out what people are saying</p>
+                </div>
+                
+                <div id="responsesContainer">
+                    <!-- Responses will be loaded here dynamically -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo">
+                    <i class="fas fa-utensils logo-icon"></i>
+                    Meal<span>Migrate</span>
+                </div>
+                <p>Your Hunger, Our Mission</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#responses">Responses</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Delivery St, Foodville</li>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> support@mealmigrate.com</li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 MealMigrate. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Careers</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification element -->
+    <div id="notification" class="notification">Message submitted successfully!</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Local storage key for responses
+        const RESPONSES_KEY = 'mealmigrateResponses';
+        
+        // DOM elements
+        const contactForm = document.getElementById('contactForm');
+        const responsesContainer = document.getElementById('responsesContainer');
+        const notification = document.getElementById('notification');
+        
+        // Function to save a response to local storage
+        function saveResponse(responseData) {
+            // Get existing responses or initialize empty array
+            let responses = JSON.parse(localStorage.getItem(RESPONSES_KEY)) || [];
+            
+            // Add new response to array
+            responses.push(responseData);
+            
+            // Save updated array back to local storage
+            localStorage.setItem(RESPONSES_KEY, JSON.stringify(responses));
+        }
+        
+        // Function to load and display all responses
+        function loadResponses() {
+            // Get responses from local storage
+            const responses = JSON.parse(localStorage.getItem(RESPONSES_KEY)) || [];
+            
+            // Clear existing content
+            responsesContainer.innerHTML = '';
+            
+            if (responses.length === 0) {
+                // Display message if no responses exist
+                responsesContainer.innerHTML = `
+                    <div class="no-responses">
+                        <i class="fas fa-inbox fa-3x mb-3" style="color: var(--primary);"></i>
+                        <h3>No responses yet</h3>
+                        <p>Be the first to leave a message!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort responses by timestamp in descending order (newest first)
+            responses.sort((a, b) => b.timestamp - a.timestamp);
+            
+            // Create and append response cards
+            responses.forEach(response => {
+                const date = new Date(response.timestamp);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                
+                const responseCard = document.createElement('div');
+                responseCard.className = 'response-card';
+                responseCard.innerHTML = `
+                    <div class="response-header">
+                        <div class="response-name">${response.name}</div>
+                        <div class="response-date">${formattedDate}</div>
+                    </div>
+                    <div class="response-email">${response.email}</div>
+                    <div class="response-message">${response.message}</div>
+                `;
+                
+                responsesContainer.appendChild(responseCard);
+            });
+        }
+        
+        // Function to show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Event listener for form submission
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Create response data object
+            const responseData = {
+                name: name,
+                email: email,
+                message: message,
+                timestamp: Date.now()
+            };
+            
+            // Save the response
+            saveResponse(responseData);
+            
+            // Reset form
+            contactForm.reset();
+            
+            // Show notification
+            showNotification('Message submitted successfully!');
+            
+            // Reload responses to display the new one
+            loadResponses();
+            
+            // Scroll to responses section
+            document.getElementById('responses').scrollIntoView({behavior: 'smooth'});
+        });
+        
+        // Load responses when page loads
+        document.addEventListener('DOMContentLoaded', loadResponses);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1635 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealMigrate - Find Your Next Meal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+    --primary: #FF6B35;
+    --secondary: #2EC4B6;
+    --dark: #20232A;
+    --light: #FDFFFC;
+    --accent: #E71D36;
+    --gray: #f5f5f5;
+    --text-gray: #666;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--light);
+    color: var(--dark);
+    overflow-x: hidden;
+    width: 100%;
+    font-size: 16px; /* Base font size for better scaling */
+}
+
+/* Fluid typography for responsive text scaling */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+header {
+    background-color: var(--dark);
+    padding: 1rem 5%;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+header.scrolled {
+    padding: 0.5rem 5%;
+    background-color: rgba(32, 35, 42, 0.95);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem; /* Added gap for better spacing when wrapping */
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--light);
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+.logo-icon {
+    color: var(--primary);
+    font-size: 1.8rem;
+}
+
+/* Mobile menu button */
+.menu-toggle {
+    display: none;
+    color: var(--light);
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem; /* Added padding for better touch target */
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+nav a {
+    color: var(--light);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: block; /* Ensures the entire area is clickable */
+}
+
+nav a:hover, nav a.active {
+    background-color: var(--primary);
+    color: var(--dark);
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.cart-icon {
+    position: relative;
+    color: var(--light);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0.25rem; /* Added padding for better touch target */
+}
+
+.cart-icon:hover {
+    color: var(--primary);
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--accent);
+    color: var(--light);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--light);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+    color: var(--primary);
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark);
+    font-weight: bold;
+}
+
+.main-content {
+    padding-top: 80px;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.search-bar-container {
+    background: linear-gradient(135deg, var(--primary), #ff824f);
+    padding: 3rem 5%;
+    width: 100%;
+}
+
+.search-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.search-title {
+    color: var(--light);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.search-bar {
+    display: flex;
+    background-color: var(--light);
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    width: 100%;
+    flex-direction: row;
+}
+
+.search-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.search-btn {
+    background-color: var(--dark);
+    color: var(--light);
+    border: none;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background-color: var(--primary);
+}
+
+.filter-options {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-tag {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--light);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.filter-tag:hover, .filter-tag.active {
+    background-color: var(--light);
+    color: var(--primary);
+}
+
+.category-nav {
+    padding: 1.5rem 5%;
+    background-color: var(--gray);
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    /* Add visual indicator for scrollable content */
+    position: relative;
+}
+
+.category-nav::-webkit-scrollbar {
+    display: none;
+}
+
+/* Visual indicator for scrollable content */
+.category-nav::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 30px;
+    background: linear-gradient(to right, transparent, var(--gray));
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.category-list {
+    display: inline-flex;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    padding-right: 30px; /* Space for the fade effect */
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    min-width: 80px; /* Ensures consistent minimum width */
+}
+
+.category-item:hover, .category-item.active {
+    background-color: var(--light);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.category-icon {
+    font-size: 1.8rem;
+    color: var(--primary);
+}
+
+.category-name {
+    font-size: 0.9rem;
+    color: var(--dark);
+    font-weight: 500;
+    text-align: center; /* Ensure text is centered */
+}
+
+.restaurants-section, .cuisines-section {
+    padding: 3rem 5%;
+    width: 100%;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem; /* Added gap for better spacing when wrapping */
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.view-all {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem; /* Added padding for better touch target */
+}
+
+.view-all:hover {
+    color: var(--secondary);
+    text-decoration: underline;
+}
+
+.restaurants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.restaurant-card {
+    background-color: var(--light);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Ensure consistent layout */
+}
+
+.restaurant-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.restaurant-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    aspect-ratio: 16 / 9; /* Maintain aspect ratio */
+}
+
+.restaurant-info {
+    padding: 1.5rem;
+    flex: 1; /* Take remaining space */
+    display: flex;
+    flex-direction: column;
+}
+
+.restaurant-name {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+    word-break: break-word; /* Prevent overflow */
+}
+
+.restaurant-details {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.restaurant-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.restaurant-tag {
+    background-color: var(--gray);
+    padding: 0.3rem 0.8rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    margin-bottom: 0.25rem;
+}
+
+.restaurant-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto; /* Push to bottom of card */
+}
+
+.delivery-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: var(--text-gray);
+}
+
+.restaurant-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--primary);
+    color: var(--light);
+    padding: 0.3rem 0.8rem;
+    border-radius: 30px;
+    font-weight: 500;
+}
+
+.cuisines-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 20px;
+}
+
+.cuisine-card {
+    background-color: var(--light);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    aspect-ratio: 1 / 1; /* Make cards square for consistent layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cuisine-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.cuisine-icon {
+    font-size: 32px;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.cuisine-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    word-break: break-word; /* Prevent overflow */
+}
+
+footer {
+    background-color: var(--dark);
+    color: var(--light);
+    padding: 4rem 5% 2rem;
+    width: 100%;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+    color: var(--light);
+}
+
+.footer-logo span {
+    color: var(--primary);
+}
+
+.footer-about p {
+    line-height: 1.6;
+    color: #bbb;
+    margin-bottom: 1.5rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light);
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.social-icon:hover {
+    background-color: var(--primary);
+    transform: translateY(-3px);
+}
+
+.footer-links h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    color: var(--light);
+    position: relative;
+}
+
+.footer-links h3::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 3px;
+    background-color: var(--primary);
+    bottom: -10px;
+    left: 0;
+}
+
+.footer-links ul {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: #bbb;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: block; /* Ensure entire area is clickable */
+    padding: 0.3rem 0; /* Add padding for better touch target */
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+    padding-left: 5px;
+}
+
+.footer-contact p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #bbb;
+    margin-bottom: 1rem;
+}
+
+.footer-contact i {
+    color: var(--primary);
+}
+
+.no-link-style {
+           text-decoration: none;
+           color: inherit;
+           cursor: pointer;
+        }
+
+.copyright {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #888;
+}
+
+/* Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Mobile Navigation */
+@media (max-width: 992px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    nav {
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+        order: 3; /* Push below other header elements */
+    }
+    
+    nav.active {
+        max-height: 300px;
+    }
+    
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+        padding: 1rem 0;
+    }
+    
+    nav li {
+        width: 100%;
+        text-align: center;
+    }
+    
+    nav a {
+        display: block;
+        padding: 0.75rem 0;
+    }
+    
+    .header-container {
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    
+    .user-actions {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding-top: 70px; /* Reduce top padding for mobile */
+    }
+    
+    .search-bar-container {
+        padding: 2rem 5%; /* Reduce padding for mobile */
+    }
+    
+    .search-title {
+        font-size: 1.5rem;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+        border-radius: 12px;
+    }
+    
+    .search-input {
+        padding: 1rem;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .search-btn {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0 0 12px 12px;
+    }
+    
+    .restaurant-name {
+        font-size: 1.1rem;
+    }
+    
+    .section-header {
+        justify-content: space-between;
+    }
+    
+    .section-title {
+        margin-bottom: 0.5rem;
+        font-size: 1.5rem;
+    }
+    
+    .restaurants-section, .cuisines-section {
+        padding: 2rem 5%; /* Reduce section padding on mobile */
+    }
+    
+    .restaurants-grid {
+        gap: 1.5rem; /* Reduce gap for tighter layout */
+    }
+    
+    .restaurant-img {
+        height: 160px; /* Slightly smaller images on mobile */
+    }
+    
+    .footer-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .restaurant-card {
+        max-width: 100%; /* Ensure cards don't overflow */
+    }
+    
+    .restaurants-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem; /* Further reduce gap */
+    }
+    
+    .cuisines-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    .restaurant-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .restaurant-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .filter-options {
+        justify-content: center;
+    }
+    
+    .category-item {
+        padding: 0.7rem 1rem;
+        min-width: 70px; /* Smaller minimum width */
+    }
+    
+    .category-icon {
+        font-size: 1.6rem;
+    }
+    
+    .section-title {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 14px; /* Smaller base font size */
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+    }
+    
+    .logo-icon {
+        font-size: 1.5rem;
+    }
+    
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .search-title {
+        font-size: 1.3rem;
+    }
+    
+    .cuisines-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .cuisine-card {
+        padding: 15px; /* Reduce padding */
+    }
+    
+    .cuisine-icon {
+        font-size: 28px;
+    }
+    
+    .cuisine-name {
+        font-size: 0.9rem;
+    }
+    
+    .category-item {
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .category-icon {
+        font-size: 1.5rem;
+    }
+    
+    .category-name {
+        font-size: 0.8rem;
+    }
+    
+    .restaurant-info {
+        padding: 1rem;
+    }
+    
+    .footer-logo {
+        font-size: 1.5rem;
+    }
+    
+    .social-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .footer-links h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 360px) {
+    .search-bar-container {
+        padding: 1.5rem 5%;
+    }
+    
+    .cuisines-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .cuisine-card {
+        padding: 12px;
+    }
+    
+    .cuisine-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+    
+    .cuisine-name {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+    
+    .category-list {
+        gap: 0.5rem;
+    }
+    
+    .category-item {
+        padding: 0.5rem 0.7rem;
+        min-width: 60px;
+    }
+    
+    .header-container {
+        gap: 0.5rem;
+    }
+    
+    .user-actions {
+        gap: 0.8rem;
+    }
+    
+    .restaurant-img {
+        height: 140px;
+    }
+    
+    .restaurant-tag {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.7rem;
+    }
+    
+    .restaurant-rating {
+        padding: 0.2rem 0.6rem;
+    }
+}
+
+/* Added improved support for larger screens */
+@media (min-width: 1200px) {
+    .restaurants-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .footer-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Improved accessibility features */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+    
+    .fade-in {
+        opacity: 1;
+        transform: none;
+    }
+    
+    .restaurant-card:hover, 
+    .cuisine-card:hover, 
+    .category-item:hover,
+    .social-icon:hover {
+        transform: none;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <!-- <a href="index.html"> -->
+            <div class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                Meal<span>Migrate</span>
+            </div>
+            <!-- </a> -->
+            <nav>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="contact_us.html">Contact Us</a></li>
+                    <li><a href="about_us.html">About Us</a></li>
+                    <!-- <li><a href="#app">App</a></li> -->
+                    <li><a href="#testimonials"></a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons" style="position: relative;">
+                <a href="cart.html" class="cart-icon" style="position: relative; display: inline-block; margin-right: 15px;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" style="
+                        position: absolute;
+                        top: -8px;
+                        right: -10px;
+                        background: red;
+                        color: white;
+                        font-size: 10px;
+                        border-radius: 50%;
+                        padding: 2px 6px;
+                        display: none;
+                    ">0</span>
+                </a>
+                <a href="profile.html" class="profile-icon" style="position: relative; display: inline-block;"><i class="fas fa-user" style="color: white; margin-left: 10px;"></i>
+                </a>
+                <div class="auth-buttons">
+                    <!-- <a href="login.html"><button class="btn btn-login">Login</button></a>
+                    <a href="signupfinal.html"><button class="btn btn-signup">Sign Up</button></a> -->
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Search Bar -->
+        <section class="search-bar-container" style="margin-bottom: 30px;">
+            <div class="search-wrapper">
+                <h2 class="search-title">Find Your Next Meal</h2>
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search for restaurants, cuisines, or dishes...">
+                    <button class="search-btn">Search</button>
+                </div>
+                <div class="filter-options">
+                    <div class="filter-tag active">All</div>
+                    <div class="filter-tag">Delivery</div>
+                    <div class="filter-tag">Pickup</div>
+                    <div class="filter-tag">Open Now</div>
+                    <div class="filter-tag">Offers</div>
+                    <div class="filter-tag">4.5+ Rating</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Restaurants Section -->
+        <section class="restaurants-section" id="allrestaurants">
+            <div class="section-header">
+                <h2 class="section-title" >Popular Restaurants</h2>
+            </div>
+            <div class="restaurants-grid">
+                <!-- Restaurant Card 1 -->
+                <div class="restaurant-card fade-in">
+                    <img src="https://static.vecteezy.com/system/resources/thumbnails/026/152/659/small/a-cheese-burger-with-tomatoes-lettuce-and-melted-cheese-ai-generated-free-photo.jpg" alt="Burger Haven" class="restaurant-img">
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name"><a href="burger_heaven.html" class="no-link-style">Burger Haven</a></h3>
+                        <div class="restaurant-details">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>1.2 miles</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>25-35 min</span>
+                            </div>
+                        </div>
+                        <div class="restaurant-tags">
+                            <span class="restaurant-tag">Burgers</span>
+                            <span class="restaurant-tag">American</span>
+                            <span class="restaurant-tag">Fast Food</span>
+                        </div>
+<!-- Hidden Dish List for Search -->
+<div class="dish-list" style="display: none;">
+    <div class="dish" data-name="Burgers">Burgers</div>
+    <div class="dish" data-name="sides">sides</div>
+    <div class="dish" data-name="Milkshakes">Milkshakes</div>
+    <!-- <div class="dish" data-name="Coffee">Coffee</div> -->
+</div>
+
+                        <div class="restaurant-footer">
+                            <div class="delivery-info">
+                                <i class="fas fa-motorcycle"></i>
+                                <!-- <span>Free delivery</span> -->
+                            </div>
+                            <div class="restaurant-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Card 2 -->
+                <div class="restaurant-card fade-in">
+                    <img src="https://media.istockphoto.com/id/1442417585/photo/person-getting-a-piece-of-cheesy-pepperoni-pizza.jpg?s=612x612&w=0&k=20&c=k60TjxKIOIxJpd4F4yLMVjsniB4W1BpEV4Mi_nb4uJU=" alt="Pizza Paradise" class="restaurant-img">
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name"><a href="pizza_paradise.html" class="no-link-style">Pizza Paradise</a></h3>
+                        <div class="restaurant-details">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>0.8 miles</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>30-45 min</span>
+                            </div>
+                        </div>
+                        <div class="restaurant-tags">
+                            <span class="restaurant-tag">Pizza</span>
+                            <span class="restaurant-tag">Italian</span>
+                            <span class="restaurant-tag">Pasta</span>
+                        </div>
+<!-- Hidden Dish List for Search -->
+<div class="dish-list" style="display: none;">
+    <div class="dish" data-name="Vegetarian slides">Vegetarian slides</div>
+    <div class="dish" data-name="Gourmet pizza">Gourmet pizza</div>
+    <div class="dish" data-name="Classic Pizza">Classic Pizza</div>
+    <div class="dish" data-name="Sweet treats">Sweet treats</div>
+</div>
+
+                        <div class="restaurant-footer">
+                            <div class="delivery-info">
+                                <i class="fas fa-motorcycle"></i>
+                                <!-- <span>$2.99 delivery</span> -->
+                            </div>
+                            <div class="restaurant-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Card 3 -->
+                <div class="restaurant-card fade-in">
+                    <img src="https://www.shutterstock.com/image-photo/closeup-shot-mouthwatering-maki-sushi-260nw-2524703473.jpg" alt="Sushi Express" class="restaurant-img">
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name"><a href="sushi_express.html" class="no-link-style">Sushi Express</a></h3>
+                        <div class="restaurant-details">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>2.1 miles</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>40-55 min</span>
+                            </div>
+                        </div>
+                        <div class="restaurant-tags">
+                            <span class="restaurant-tag">Japanese</span>
+                            <span class="restaurant-tag">Sushi</span>
+                            <span class="restaurant-tag">Asian</span>
+                        </div>
+<!-- Hidden Dish List for Search -->
+<div class="dish-list" style="display: none;">
+    <div class="dish" data-name="Rolls">Rolls</div>
+    <div class="dish" data-name="Nigiri">Nigiri</div>
+    <div class="dish" data-name="Inari">Inari</div>
+    <div class="dish" data-name="Side dishes">Side dishes</div>
+</div>
+
+                        <div class="restaurant-footer">
+                            <div class="delivery-info">
+                                <i class="fas fa-motorcycle"></i>
+                                <!-- <span>$3.99 delivery</span> -->
+                            </div>
+                            <div class="restaurant-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Card 4 -->
+                <div class="restaurant-card fade-in">
+                    <img src="https://media.istockphoto.com/id/542331706/photo/homemade-spicy-shrimp-tacos.jpg?s=612x612&w=0&k=20&c=fxx5deD9YgseQfLc3IFZpoMfwdq8Fb7jYimAjITs6TA=" alt="Taco Fiesta" class="restaurant-img">
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name"><a href="taco_feista.html" class="no-link-style">Taco Fiesta</a></h3>
+                        <div class="restaurant-details">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>1.5 miles</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>20-30 min</span>
+                            </div>
+                        </div>
+                        <div class="restaurant-tags">
+                            <span class="restaurant-tag">Mexican</span>
+                            <span class="restaurant-tag">Tacos</span>
+                            <span class="restaurant-tag">Burritos</span>
+                        </div>
+<!-- Hidden Dish List for Search -->
+<div class="dish-list" style="display: none;">
+    <div class="dish" data-name="Tacos">Tacos</div>
+    <div class="dish" data-name="Burritos & Quesadillas">Burritos & Quesadillas</div>
+    <div class="dish" data-name="Sides & Appetizers">Sides & Appetizers</div>
+    <!-- <div class="dish" data-name="Coffee">Coffee</div> -->
+</div>
+
+                        <div class="restaurant-footer">
+                            <div class="delivery-info">
+                                <i class="fas fa-motorcycle"></i>
+                                <!-- <span>$1.99 delivery</span> -->
+                            </div>
+                            <div class="restaurant-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Card 5 -->
+                <div class="restaurant-card fade-in">
+                    <img src="https://media.istockphoto.com/id/1169694902/photo/assorted-indian-non-vegetarian-food-recipe-served-in-a-group-includes-chicken-curry-mutton.jpg?s=612x612&w=0&k=20&c=J4jX3IYGdS3ODgHF0LHCySDo6bFObh0_GZzAqHgXZgU=" alt="Thai Spice" class="restaurant-img">
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name"><a href="spice_station.html" class="no-link-style">Spice Station</a></h3>
+                        <div class="restaurant-details">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>1.8 miles</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>35-50 min</span>
+                            </div>
+                        </div>
+                        <div class="restaurant-tags">
+                            <span class="restaurant-tag">North Indian</span>
+                            <span class="restaurant-tag">Spicy</span>
+                            <span class="restaurant-tag">Asian</span>
+                        </div>
+<!-- Hidden Dish List for Search -->
+<div class="dish-list" style="display: none;">
+    <div class="dish" data-name="Starters">Starters</div>
+    <div class="dish" data-name="Beverages">Beverages</div>
+    <div class="dish" data-name="MainCourse">MainCourse</div>
+    <div class="dish" data-name="Dosa">Dosa</div>
+</div>
+
+                        <div class="restaurant-footer">
+                            <div class="delivery-info">
+                                <i class="fas fa-motorcycle"></i>
+                                <!-- <span>$2.49 delivery</span> -->
+                            </div>
+                            <div class="restaurant-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Card 6 -->
+                <div class="restaurant-card fade-in">
+                    <img src="https://media.istockphoto.com/id/1024558722/photo/group-of-south-indian-food-like-masala-dosa-uttapam-idli-idly-wada-vada-sambar-appam-semolina.jpg?s=612x612&w=0&k=20&c=cbuPAUzlnqlnXhZAa2NbLoSHLUi6OEaVFayHKRAYO7E=" alt="Green Leaf Cafe" class="restaurant-img">
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name"><a href="cochin_curry.html" class="no-link-style">Cochin Curry</a></h3>
+                        <div class="restaurant-details">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>0.7 miles</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>15-25 min</span>
+                            </div>
+                        </div>
+                        <div class="restaurant-tags">
+                            <span class="restaurant-tag">South Indian</span>
+                            <span class="restaurant-tag">Vegetarian</span>
+                            <span class="restaurant-tag">Dosa</span>
+                        </div>
+<!-- Hidden Dish List for Search -->
+<div class="dish-list" style="display: none;">
+    <div class="dish" data-name="Starters">Starters</div>
+    <div class="dish" data-name="Beverages">Beverages</div>
+    <div class="dish" data-name="MainCourse">MainCourse</div>
+    <div class="dish" data-name="Dosa">Dosa</div>
+</div>
+
+                        <div class="restaurant-footer">
+                            <div class="delivery-info">
+                                <i class="fas fa-motorcycle"></i>
+                                <!-- <span>Free delivery</span> -->
+                            </div>
+                            <div class="restaurant-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.9</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Card 7 -->
+                <div class="restaurant-card fade-in">
+                    <img src="https://media.istockphoto.com/id/155433174/photo/bolognese-pens.jpg?s=612x612&w=0&k=20&c=A_TBqOAzcOkKbeVv8qSDs0bukfAedhkA458JEFolo_M=" alt="Pasta e Vino" class="restaurant-img">
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name"><a href="pasta_e_vino.html" class="no-link-style">Pasta e Vino</a></h3>
+                        <div class="restaurant-details">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>1.3 miles</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>30-45 min</span>
+                            </div>
+                        </div>
+                        <div class="restaurant-tags">
+                            <span class="restaurant-tag">Italian</span>
+                            <span class="restaurant-tag">Pasta</span>
+                            <span class="restaurant-tag">Wine</span>
+                        </div>
+
+                          <!-- Hidden Dish List for Search -->
+        <div class="dish-list" style="display: none;">
+            <div class="dish" data-name="Lasagna">Lasagna</div>
+            <div class="dish" data-name="Pasta">Pasta</div>
+            <div class="dish" data-name="Pizza">Pizza</div>
+            <div class="dish" data-name="Coffee">Coffee</div>
+        </div>
+
+                        <div class="restaurant-footer">
+                            <div class="delivery-info">
+                                <i class="fas fa-motorcycle"></i>
+                                <!-- <span>$3.50 delivery</span> -->
+                            </div>
+                            <div class="restaurant-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Card 8 -->
+                <div class="restaurant-card fade-in">
+                    <img src="https://plus.unsplash.com/premium_photo-1665669263531-cdcbe18e7fe4?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YmFrZXJ5fGVufDB8fDB8fHww" alt="Breakfast Club" class="restaurant-img">
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name"><a href="brownie_bliss.html" class="no-link-style">Brownie Bliss</a></h3>
+                        <div class="restaurant-details">
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>0.9 miles</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>20-30 min</span>
+                            </div>
+                        </div>
+                        <div class="restaurant-tags">
+                            <span class="restaurant-tag">Bakery</span>
+                            <span class="restaurant-tag">Cakes</span>
+                            <span class="restaurant-tag">Coffee</span>
+                        </div>
+<!-- Hidden Dish List for Search -->
+<div class="dish-list" style="display: none;">
+    <div class="dish" data-name="Donuts">Donuts</div>
+    <div class="dish" data-name="Cupcakes">Cupcakes</div>
+    <div class="dish" data-name="Cakes">Cakes</div>
+    <div class="dish" data-name="Cookies">Cookies</div>
+</div>
+
+                        <div class="restaurant-footer">
+                            <div class="delivery-info">
+                                <i class="fas fa-motorcycle"></i>
+                                <!-- <span>$1.49 delivery</span> -->
+                            </div>
+                            <div class="restaurant-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cuisines Section -->
+        <!-- <section class="cuisines-section" id="allcusines">
+            <div class="section-header">
+                <h2 class="section-title">Popular Cuisines</h2>
+            </div>
+            <div class="cuisines-grid">
+                <div class="cuisine-card">
+                    <div class="cuisine-icon">
+                        <i class="fas fa-hamburger"></i>
+                    </div>
+                    <h3 class="cuisine-name">American</h3>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-icon">
+                        <i class="fas fa-pizza-slice"></i>
+                    </div>
+                    <h3 class="cuisine-name">Italian</h3>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-icon">
+                        <i class="fas fa-fish"></i>
+                    </div>
+                    <h3 class="cuisine-name">Japanese</h3>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-icon">
+                        <i class="fas fa-pepper-hot"></i>
+                    </div>
+                    <h3 class="cuisine-name">Mexican</h3>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3 class="cuisine-name">North Indian</h3>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-icon">
+                        <i class="fas fa-mortar-pestle"></i>
+                    </div>
+                    <h3 class="cuisine-name">South Indian</h3>
+                </div>
+                <a href="brownie_bliss.html">
+                <div class="cuisine-card" style="text-decoration: none;">
+                    <div class="cuisine-icon" >
+                        <i class="fas fa-bread-slice"></i>
+                    </div>
+                    <h3 class="cuisine-name" style="text-decoration: none;">Bakery</h3>
+                </div>
+            </div>
+        </a>
+        </section> -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="allfooter">
+        <div class="footer-container">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <i class="fas fa-utensils logo-icon"></i>
+                    Meal<span>Migrate</span>
+                </div>
+                <p class="footer-about">
+                    Discover the best food from over 1,000 restaurants and fast delivery to your doorstep.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-heading">About Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Company</a></li>
+                    <li><a href="#">How it works</a></li>
+                    <li><a href="#">Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-heading">For Restaurants</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Partner with us</a></li>
+                    <li><a href="#">Apps for restaurants</a></li>
+                    <li><a href="#">Restaurant dashboard</a></li>
+                    <li><a href="#">Success stories</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-heading">Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Contact us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Help center</a></li>
+                    <li><a href="#">Privacy policy</a></li>
+                    <li><a href="#">Terms of service</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-heading">Subscribe</h3>
+                <p class="footer-newsletter-text">Subscribe to our newsletter for the latest updates and offers</p>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Your email address" class="newsletter-input">
+                    <button class="newsletter-btn">Subscribe</button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="copyright">© 2025 MealMigrate. All rights reserved.</p>
+            <div class="payment-methods">
+                <span>Payment Methods:</span>
+                <i class="fab fa-cc-visa"></i>
+                <i class="fab fa-cc-mastercard"></i>
+                <i class="fab fa-cc-amex"></i>
+                <i class="fab fa-cc-paypal"></i>
+                <i class="fab fa-apple-pay"></i>
+                <i class="fab fa-google-pay"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FontAwesome Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <!-- Main Script -->
+    <script>
+        // Fade in animation for restaurant cards
+        document.addEventListener("DOMContentLoaded", function() {
+            const cards = document.querySelectorAll('.fade-in');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                }, 150 * index);
+            });
+            
+            // Filter tags functionality
+            const filterTags = document.querySelectorAll('.filter-tag');
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    filterTags.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Category selection functionality
+            const categoryItems = document.querySelectorAll('.category-item');
+            categoryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    categoryItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+
+        const searchInput = document.querySelector('.search-input');
+const allRestaurants = document.querySelectorAll('.restaurant-card');
+const noResultsDiv = document.getElementById('noResults');
+
+// Create a cute animated message if it doesn't exist
+if (!noResultsDiv) {
+    const newNoResults = document.createElement('div');
+    newNoResults.id = 'noResults';
+    newNoResults.innerHTML = `
+        <div class="no-results-text">
+            🍔 <strong>Oopsie!</strong> We couldn’t find your craving 😢<br>
+            Try something else delicious!
+        </div>
+    `;
+    newNoResults.style.display = 'none';
+    newNoResults.style.textAlign = 'center';
+    newNoResults.style.marginTop = '20px';
+    newNoResults.style.color = '#777';
+    newNoResults.style.fontSize = '18px';
+    newNoResults.style.transition = 'opacity 0.3s ease';
+    newNoResults.style.opacity = '0';
+
+    searchInput.closest('.search-wrapper').appendChild(newNoResults);
+}
+
+// Function to perform live filtering
+function handleLiveSearch() {
+    const query = searchInput.value.toLowerCase().trim();
+    let foundAny = false;
+
+    allRestaurants.forEach(restaurant => {
+        const restaurantName = restaurant.querySelector('.restaurant-name').textContent.toLowerCase();
+        const restaurantTags = Array.from(restaurant.querySelectorAll('.restaurant-tag')).map(tag => tag.textContent.toLowerCase()).join(' ');
+
+        let restaurantMatch = restaurantName.includes(query) || restaurantTags.includes(query);
+
+        const dishes = restaurant.querySelectorAll('.dish');
+        let dishMatch = false;
+
+        dishes.forEach(dish => {
+            const dishName = dish.textContent.toLowerCase();
+            if (dishName.includes(query)) {
+                dishMatch = true;
+                dish.style.display = 'block';
+            } else {
+                dish.style.display = 'none';
+            }
+        });
+
+        if (restaurantMatch || dishMatch) {
+            restaurant.style.display = 'block';
+            foundAny = true;
+        } else {
+            restaurant.style.display = 'none';
+        }
+    });
+
+    const noResults = document.getElementById('noResults');
+    if (foundAny || query === '') {
+        noResults.style.display = 'none';
+        noResults.style.opacity = '0';
+    } else {
+        noResults.style.display = 'block';
+        setTimeout(() => {
+            noResults.style.opacity = '1';
+        }, 10);
+    }
+}
+
+// 🔥 Trigger search on typing
+searchInput.addEventListener('input', handleLiveSearch);
+
+
+
+
+
+    let cartCount = parseInt(localStorage.getItem('cartCount')) || 0;
+    let cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+    
+    function updateCartUI() {
+        const cartCountSpan = document.getElementById('cart-count');
+        if (cartCountSpan) {
+            cartCountSpan.textContent = cartCount;
+            cartCountSpan.style.display = cartCount > 0 ? 'inline-block' : 'none';
+        }
+    }
+    
+    // Initial badge update
+    updateCartUI();
+    
+    // Sync badge if another tab/page changes localStorage
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'cartCount' || event.key === 'cartItems') {
+            cartCount = parseInt(localStorage.getItem('cartCount')) || 0;
+            cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+            updateCartUI();
+        }
+    });
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('button[data-name]');
+        
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const name = button.getAttribute('data-name');
+                const price = parseFloat(button.getAttribute('data-price'));
+                const id = button.getAttribute('data-id') || `item-${Date.now()}`;
+    
+                if (!name || isNaN(price)) return;
+    
+                const existingItem = cart.find(item => item.id === id);
+                if (existingItem) {
+                    existingItem.quantity = (existingItem.quantity || 1) + 1;
+                } else {
+                    cart.push({ id, name, price, quantity: 1 });
+                }
+    
+                cartCount++;
+                localStorage.setItem('cartItems', JSON.stringify(cart));
+                localStorage.setItem('cartCount', cartCount);
+                updateCartUI();
+            });
+        });
+    });
+    
+    </script>
+</body>
